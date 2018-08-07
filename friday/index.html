@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Friday</title>
+</head>
+<body>
+
+	<script type="text/javascript">
+		// URL aldienightstar.github.io/friday/index.html?redir=localhost:8080/friday/exec/123
+		window.onload = function () {
+			// Get first url
+			var url = window.location.href;
+			var index = url.indexOf("?redir=") + 7;
+			url = url.substring(index);
+			
+			// Now just redirect
+			window.location.href = "http://" + url;
+		}
+	</script>
+
+</body>
+</html>
