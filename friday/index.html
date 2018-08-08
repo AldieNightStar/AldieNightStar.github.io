@@ -14,9 +14,13 @@
 			url = url.substring(index);
 			
 			// Now just redirect
-			window.location.href = "http://" + url;
+			if (index > 7) {
+				window.location.href = "http://" + url;
+			}
 		}
 	</script>
+
+	<img src="404.jpg" width="100%">
 
 </body>
 </html>
