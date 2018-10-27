@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Monna MyStory 4.0 -- HaxiDenti</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		#buttons button {
+			display: block;
+			width: 99%;
+			border-radius: 0px 32px;
+			color: white;
+			background-color: rgba(0, 0, 0, .5);
+			transition: 200ms;
+			font-size: 32px;
+			margin-left: 20%;
+			width: 60%;
+		}
+
+		#buttons button:hover {
+			background-color: white;
+			color: black;
+			border-radius: 32px 0px;
+			margin-left: 0%;
+			width: 100%;
+		}
+
+		#app {
+			position: absolute;
+			width: 80%;
+			left: 10%;
+		}
+
+		#text {
+			font-size: 24px;
+			border-radius: 32px;
+			padding: 32px;
+			border: none;
+			background-color: rgba(0, 0, 0, .4);
+			color: white;
+			transition: 300ms;
+			overflow: auto;
+		}
+
+		#body {
+			transition: 300ms;
+		}
+
+		#images img {
+			transition: 1000ms;
+		}
+	</style>
+</head>
+<body>
+
+	<div id=images></div>
+	<div id=app>
+		<div id=text></div> 
+		<div id=buttons></div>
+	</div>
+
+	<script type="text/javascript">
+		var chapters = [];
+		function _chapter(name, sceneName) {
+			chapters.push(
+				{name: name, scene: sceneName}
+			);
+		}
+
+		// Timers
+		window.addEventListener("load", function() {
+			setInterval(function() {
+				var height = window.innerHeight;
+				var appHeight = document.getElementById("app").offsetHeight;
+				document.getElementById("app").style.top = ((height / 2) - appHeight/2) + "px";
+				document.body.style['background-size'] = "100% " + height + "px";
+			}, 100);
+
+			// Animation for added images
+			var an = 0;
+			setInterval(function() {
+				var images = document.getElementById("images").children;
+				function move(ypos) {
+					for (var i = 0; i < images.length; i++) {
+						var y = parseInt(images[i].style.bottom);
+						y += ypos;
+						images[i].style.bottom = y + "px";
+					}
+				}
+
+				if (an == 0) {
+					move(10); an = 1;
+				} else {
+					move(-10) ; an = 0;
+				}
+			}, 1000);
+		})
+
+		function _run(f) {
+			if (typeof(f) === "string") {
+				return eval(f);
+			} else {
+				return f();
+			}
+		}
+
+		function button(caption, oncl) {
+			var b = document.createElement("button");
+			b.innerHTML = caption;
+			b.onclick = function() { _run(oncl); }
+			var div = document.getElementById("buttons");
+			div.appendChild(b);
+		}
+
+		function clear() {
+			document.getElementById("text"   ).innerHTML = "";
+			document.getElementById("buttons").innerHTML = "";
+		}
+
+		function print(txt) {
+			var div = document.getElementById("text");
+			div.innerHTML += txt + "<br>";
+		}
+
+		function bgImg(src) {
+			var height = window.innerHeight;
+			document.body.style['background-image'] = "url("+src+")";
+			document.body.style['background-repeat'] = "no-repeat";
+			document.body.style['background-attachment'] = "fixed";
+			document.body.style['transition'] = "200ms";
+		}
+
+		var sound = new Audio();
+		function snd(src) {
+			if (src == undefined
+				|| src == ""
+				|| src == "."
+			) {
+				sound.currentTime = 0;
+				sound.pause();
+			}
+			sound.src = src;
+			sound.currentTime = 0;
+			sound.play();
+		}
+
+
+		var music = new Audio();
+		music.volume = 0.4;
+		music.loop = true;
+		function mus(src) {
+			if (src == undefined
+				|| src == ""
+				|| src == "."
+			) {
+				music.currentTime = 0;
+				music.pause();
+			}
+			music.src = src;
+			music.currentTime = 0;
+			music.play();
+		}
+
+		function _next(name, del, auto) {
+			setTimeout(function() {
+				var ev  = name + "();";
+				if (!auto) {
+					button("Next &gt;&gt;", ev);
+				} else {
+					fun();
+				}
+			}, del);
+		}
+
+		function img_set(src, x, y, w, h) {
+			var div = document.getElementById("images");
+			var img = document.createElement("img");
+			img.src = src;
+			img.style.position = "absolute";
+			img.style.left     = x + "%";
+			img.style.top      = y + "%";
+			img.style.width    = w + "%";
+			img.style.height   = h + "%";
+			div.appendChild(img);
+		}
+
+		function img_side(src, left) {
+			var div = document.getElementById("images");
+			var img = document.createElement("img");
+			img.src = src;
+			img.style.position = "absolute";
+			img.style.bottom = "10px";
+			img.style.width = "30%";
+			if (left) {
+				img.style.left = "0px";
+			} else {
+				img.style.right = "0px";
+				img.style.transform = "scaleX(-1)";
+			}
+			div.appendChild(img);
+		}
+
+		function img_clear() {
+			var div = document.getElementById("images");
+			div.innerHTML = "";
+		}
+
+		function _text_hide(flag) {
+			var div = document.getElementById("text");
+			if (flag) {
+				div.style.opacity = 0;
+			} else {
+				div.style.opacity = 1;
+			}
+		}
+
+		function _chapterButtons() {
+			chapters.forEach(function(chapter, i, arr) {
+				button((i + 1) + ". " + chapter.name, function() {
+					eval(chapter.scene + "();");
+				});
+			})
+		}
+
+		function _chapterButton(caption, chName) {
+			function findChapter(name) {
+				var found;
+				chapters.forEach(function (e) { 
+					if (e.name == name) {
+						found = e;
+						return;
+					}
+				});
+				return found;
+			}
+
+			var chapter = findChapter(chName);
+			if (chapter) {
+				button(caption, function() { eval(chapter.scene + "();"); });
+			}
+		}
+
+		function scene_0() {
+clear();
+_next('scene_1', 0, false);
+bgImg('res/logo.jpg');
+print('Monna MyStory * HaxiDenti Ihor-fox [UA] 2018');
+print('V4.3');
+print('Choose your chapter');
+_chapterButtons();
+}
+
+function scene_1() {
+clear();
+_next('scene_2', 1500, false);
+mus('res/01.mp3');
+bgImg('res/01.jpg');
+print('Солнце медленно взошло над горизонтом, освещая густой лес. Посреди густых деревьев, этой местности стояла одинокая деревушка. Недалеко от неё были дома. Выглядели они далеко неновыми.');
+}
+
+function scene_2() {
+clear();
+_next('scene_3', 1500, false);
+print('Каменные стены давно поросли мхом и травой в перемешку с лозой, ну а деревянные крыши выстланные черепицей имели огромные дыры. Кроме того крыши были заросшими не хуже стен, так что здесь можно было бы увидеть гнезда птиц.');
+}
+
+function scene_3() {
+clear();
+_next('scene_4', 1500, false);
+img_clear();
+img_side('res/sil.png', true);
+print('Внезапно, в окно из тех домов, промелькнул чей-то силуэт. Спустя пару секунд, в дверном проеме, закрытом куском ткани, появился парень.');
+}
+
+function scene_4() {
+clear();
+_next('scene_5', 1500, false);
+print('Выглядел он весьма нестандартно. Одежда на нем была изодрана, а длинные волосы укрывали плечи. Лицо юнца было укрыто богатой россыпью веснушек и небольших следов от царапин, но это не портило его внешности.');
+}
+
+function scene_5() {
+clear();
+_next('scene_6', 1500, false);
+print('Выйдя из дверного проема и встав босой ногой на каменистую улицу, покрытую зеленой травой, парень поморщился. Все так же, он сделал шаг второй.');
+}
+
+function scene_6() {
+clear();
+_next('scene_7', 1500, false);
+print('-Бр…холодно. -- Констатировал он, поправив на себе старую рубаху и меховой жилет.');
+print('Парень неторопливо шел вдоль по разрушенной улице, рассматривая при этом дома где ранее кипела жизнь, где ранее жили люди со своим суровым нравом и бытом.');
+}
+
+function scene_7() {
+clear();
+_next('scene_8', 1500, false);
+print('Когда-то деревня была населена северным народом которые именовали себя Викингами, но в одну ужасную ночь все жители селения исчезли в пучинах пламени. Юнец не знал, что вызвало столь огромный пожар который уничтожил всех.');
+}
+
+function scene_8() {
+clear();
+_next('scene_9', 1500, false);
+print('Сам же он выжил, и вспоминал, как столько много людей бежало в тот день от стихии. Пройдя до конца улицы и остановившись напротив огромного дома с несколькими обгоревшими останками знамен, Вулф вздрогнул. Неизвестно почему, но этот дом всегда вызывал у него неприятные ощущения и воспоминания.');
+}
+
+function scene_9() {
+clear();
+_next('scene_10', 1500, false);
+bgImg('res/02.png');
+img_clear();
+print('Быстро бросив на сооружение свой взор, парень стал столь же быстро удалятся от него в сторону останков ворот, которые были уже 12 лет как раскрыты на распашку. Пройдя через них парень остановился после чего стал думать.');
+}
+
+function scene_10() {
+clear();
+_next('scene_11', 1500, false);
+print('-Хм…может сходить на кристальное озеро? Нет, вода слишком холодная, да и рыбы уж нет у берегов.  -- Проговорил он вслух.');
+print('-Может тогда на поляну каменных цветов иль сходить к старому дубу? Вновь пробормотал он себе под нос.');
+}
+
+function scene_11() {
+clear();
+_next('scene_12', 1500, false);
+print('Постояв у ворот еще пару минут с серьезным выражением лица, Вулф спешно зашагал по заросшей травой и кустами шиповника, развлетвленной дороге. Дойдя до развилки, он подошел к одному из деревьев, после чего заглянул в его дупло.');
+}
+
+function scene_12() {
+clear();
+_next('scene_13', 1500, false);
+print('Заглянув внутрь и запустив туда руку, юнец спустя мгновение извлек корзинку и небольшой ржавый ножик. Извлечя все это Вулф с довольным лицом направился по извилистой тропинке среди тернистых кустарников и густой росистой травы. Пройдя пол пути юнец остановился после чего прислушался, где-то неподалеку слышалась грызня и вой волков.');
+print('-Не хорошо это, хоть бы не встретить кого из них. -- Молвил тихо себе под нос Вулф, положив руку на рукоять.');
+}
+
+function scene_13() {
+clear();
+_next('scene_14', 1500, false);
+print('Немного постояв на месте, тот двинулся дальше к цели и через пару минут ему предстали крупные скалы и валуны, стоящие стеной перед ним.');
+}
+
+function scene_14() {
+clear();
+_next('scene_15', 1500, false);
+img_clear();
+img_side('res/sil.png', false);
+print('Подойдя к ним в плотную парень встал на четвереньки;');
+}
+
+function scene_15() {
+clear();
+_next('scene_16', 1500, false);
+print('Протиснулся в небольшую щель между камнями.');
+}
+
+function scene_16() {
+clear();
+_next('scene_17', 1500, false);
+print('Оказался он на поляне густо усыпанной цветами и небольшими кустиками малины. Встав на ноги и взяв в руки корзинку тот неторопливо пошел сквозь благоухающие цветы, пройдя мимо очередной пестрой красавицы, Вулф заметил пару красных пятнышек на лепестках и листьях. Присмотревшись повнимательней парень понял что это была подсохшая кровь, осознав это тот насторожился так как тот цветок был не один с каплями. Проследив за цепочкой из кровавых следов парень остановился у куста малины на краю поляны, куст произрастал под несколькими валунами с мхом.');
+}
+
+function scene_17() {
+clear();
+_next('scene_18', 1500, false);
+print('Протянув руку и отодвинув пару веточек Вулф увидел нору в которую он сможет пройти немного пригнувшись, присмотревшись к входу тот заметил странные следы среди которых выделялось несколько отпечатков лап где была кровь. Отпустив ветви и зайдя за куст с опаской юнец подошел к входу и заглянул внутрь, посмотрев вниз тот заметил едва заметный свет стелящийся по туннелю.');
+print('-Что во имя богов тут случилось? Прошептал себе под нос он начиная спускаться по крутому спуску вниз.');
+}
+
+function scene_18() {
+clear();
+_next('scene_19', 1500, false);
+print('Сделав очередной шаг Вулф почувствовал как под его ногой хрустнул корень некого дерева, стоило только корню хрустнуть как тут же кусок земли на котором стоял юнец стал рушиться.');
+}
+
+function scene_19() {
+clear();
+_next('scene_20', 1500, false);
+img_clear();
+print('Через одно мгновение Вулф куборем скатился вниз по туннелю  и оказался в достаточно большой норе чей пол был устлан мхом, опалой листвой и травой с цветами.');
+}
+
+function scene_20() {
+clear();
+_next('scene_21', 1500, false);
+print('Оказавшись в этой пещерке парень измучено застонал после чего приподнялся на четвереньки, стоило ему только это сделать как его затылок тут же окатило чье-то горячее дыхание.');
+}
+
+function scene_21() {
+clear();
+_next('scene_22', 1500, false);
+bgImg('res/03.jpg');
+print('Открыв глаза и посмотрев сначала на свои испачканные руки Вулф увидел на них слабый свет который исходил от огня в центре пещерки где было небольшое углубление обложенное камнями.');
+}
+
+function scene_22() {
+clear();
+_next('scene_23', 1500, false);
+print('-Человек… Злобно прошипел чей-то голос на головой юнца после чего тот вновь получил порцию теплого дыхания.');
+}
+
+function scene_23() {
+clear();
+_next('scene_24', 1500, false);
+print('Взглотнув Вулф стал неспешно подымать свое лицо, попутно пятясь назад на четвереньках. Подняв лицо с пола на половину парень увидел перед собой две когтистые, рыжие лапы покрытые плотным мехом.');
+}
+
+function scene_24() {
+clear();
+_next('scene_25', 1500, false);
+print('Увидев их парень вздрогнул, нечто в глубине его вопило о неминуемой гибели в то время как мозг требовал сохранять спокойствие и хладнокровие. ');
+print('-Не шевелись жалкий человечишка, иначе я тебя сожгу.');
+}
+
+function scene_25() {
+clear();
+_next('scene_26', 1500, false);
+print('Злобно прошипел голос владелицы лап.');
+}
+
+function scene_26() {
+clear();
+_next('scene_27', 1500, false);
+print('Прослушав это Вулф замер, но легкая дрожь не пропала, после чего в голове стал представлять свою кончину от лап неведомого чудища плюющегося огнем.');
+}
+
+function scene_27() {
+clear();
+_next('scene_28', 1500, false);
+print('Замерев на месте юнец стал ожидать дальнейшего развития действий, долго ждать не пришлось так как чуткое ухо Вулфа уловило звуки харахтерные для обнюхивания. Так же глаза парня, что вновь смотрели на мягкую подстилку из растений, уловили движения вокруг него.');
+}
+
+function scene_28() {
+clear();
+_next('scene_29', 1500, false);
+print('Вулф видел как четыре когтистые лапы бродят возле него, кроме того парень заметил то что одна задняя лапка неведомого чудища была ранена. На левой задней конечности неизвестного существа были глубокие порезы, а так же было видно что кость повреждена из-за чего зверь прихрамывает.');
+}
+
+function scene_29() {
+clear();
+_next('scene_30', 1500, false);
+print('-Зачем ты пришел сюда человек? Все так же грубо рыча молвил дракон.');
+print('-З…за цветами…и ягодами… Проговорил он после чего поднял взор.');
+}
+
+function scene_30() {
+clear();
+_next('scene_31', 1500, false);
+print('Подняв взор с земли Вулф столкнулся взглядом с огнедышащим ящером который был размером с него, не считая длинный и гибкий хвост с кисточкой на конце.');
+}
+
+function scene_31() {
+clear();
+_next('scene_32', 1500, false);
+print('Столкнувшись взорами оба стали пристально вглядываться друг в друга ища опасность и подвохи, ящер явно учуял стальной клинок который лежал в корзинке возле юнца. Учуяв его дракон незамедлительно выпустил в корзинку струю пламени которое быстро все уничтожило.');
+}
+
+function scene_32() {
+clear();
+_next('scene_33', 1500, false);
+print('- Уходи отсюда. Прошипел ящер после чего злобно сверкнул своими желтыми глазами и белоснежными клыками.');
+print('-Хорошо. Коротко молвил юнец после чего быстро попятился к выходу.');
+}
+
+function scene_33() {
+clear();
+_next('scene_34', 1500, false);
+print('Спустя пару минут юнец вылез из пещерки после чего на всем ходу рванул через поляну к лазу, подбежав к выходу и выбравшись через него Вулф продолжил свой бег сквозь дремучий лес. Неизвестно сколько прошло после момента побега, но юноша уже сидел у себя в укрытие которое расположилось в подвале того дома откуда он вышел.');
+}
+
+function scene_34() {
+clear();
+_next('scene_35', 1500, false);
+print('Забившись в угол где было свалено все тряпье Вулф стал прислушиваться к всем шорохам и прочему, страх за свою жизнь обуял парня так как никогда ранее.');
+}
+
+function scene_35() {
+clear();
+_next('scene_36', 1500, false);
+print('Перед глазами испуганного до полу смерти Вулфа стояла одна картина, картина того как дракон медленно обходил его определяя опасность для себя. Кроме этого он постоянно чувствовал у себя в голове тот пронзительный взгляд двух янтарно желтых глаз с вертикальными зрачками.');
+}
+
+function scene_36() {
+clear();
+_next('scene_37', 1500, false);
+print('На протяжение всего оставшегося дня и половины ночи Вулф сидел в своем убежище не сводя взора с единственного входа к нему.');
+}
+
+function scene_37() {
+clear();
+print('Но все же ближе к полуночи силы парня иссякли и тот провалился в беспокойный сон что заставлял его ворочаться и вздрагивать время от времени представляя при этом как пушистый дракон его раздирает на части или испепеляет.');
+}
+
+
+
+scene_0();
+
+	</script>
+
+</body>
+</html>
