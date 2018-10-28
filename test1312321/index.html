@@ -174,8 +174,9 @@
 		function _next(name, del, auto) {
 			setTimeout(function() {
 				var ev  = name + "();";
+				var fun = function() { eval(ev); };
 				if (!auto) {
-					button("Next &gt;&gt;", function() { eval(ev); });
+					button("Next &gt;&gt;", fun);
 				} else {
 					fun();
 				}
@@ -255,7 +256,7 @@
 function scene_0() {
 clear();
 var current = "scene_0";
-var currentF = scene_0;
+var reload = window.scene_0;
 _next('scene_1', 0, false);
 bgImg('res/logo.jpg');
 print('Monna MyStory * HaxiDenti Ihor-fox [UA] 2018');
@@ -268,7 +269,7 @@ _chapter('Начало', 'scene_1');
 function scene_1() {
 clear();
 var current = "scene_1";
-var currentF = scene_1;
+var reload = window.scene_1;
 _next('scene_2', 0, false);
 bgImg('res/01.jpg');
 print('Они стояли вместе держась за руки');
@@ -277,31 +278,31 @@ print('Они стояли вместе держась за руки');
 function scene_2() {
 clear();
 var current = "scene_2";
-var currentF = scene_2;
-_next('scene_3', 1000, false);
+var reload = window.scene_2;
+_next('scene_3', 3000, true);
 print('В одном дыхании,');
 }
 
 function scene_3() {
 clear();
 var current = "scene_3";
-var currentF = scene_3;
-_next('scene_4', 1000, false);
+var reload = window.scene_3;
+_next('scene_4', 3000, true);
 print('Они ожидали прихода в рай.');
 }
 
 function scene_4() {
 clear();
 var current = "scene_4";
-var currentF = scene_4;
-_next('scene_5', 1000, false);
+var reload = window.scene_4;
+_next('scene_5', 3000, true);
 print('Конец был близко, но они знали...');
 }
 
 function scene_5() {
 clear();
 var current = "scene_5";
-var currentF = scene_5;
+var reload = window.scene_5;
 _next('scene_6', 1000, false);
 print('знали, каков будет Господний рай,');
 }
@@ -309,7 +310,7 @@ print('знали, каков будет Господний рай,');
 function scene_6() {
 clear();
 var current = "scene_6";
-var currentF = scene_6;
+var reload = window.scene_6;
 _next('scene_7', 1000, false);
 bgImg('res/02.jpeg');
 print('на новой земле.');
@@ -318,7 +319,7 @@ print('на новой земле.');
 function scene_7() {
 clear();
 var current = "scene_7";
-var currentF = scene_7;
+var reload = window.scene_7;
 _next('scene_8', 1000, false);
 print('И вот удар!');
 }
@@ -326,7 +327,7 @@ print('И вот удар!');
 function scene_8() {
 clear();
 var current = "scene_8";
-var currentF = scene_8;
+var reload = window.scene_8;
 _next('scene_9', 1000, false);
 print('Все померкло!');
 }
@@ -334,7 +335,7 @@ print('Все померкло!');
 function scene_9() {
 clear();
 var current = "scene_9";
-var currentF = scene_9;
+var reload = window.scene_9;
 _next('scene_10', 1000, false);
 print('И руки они не отпустили,');
 }
@@ -342,7 +343,7 @@ print('И руки они не отпустили,');
 function scene_10() {
 clear();
 var current = "scene_10";
-var currentF = scene_10;
+var reload = window.scene_10;
 _next('scene_11', 1000, false);
 print('Все так-же держась,');
 }
@@ -350,7 +351,7 @@ print('Все так-же держась,');
 function scene_11() {
 clear();
 var current = "scene_11";
-var currentF = scene_11;
+var reload = window.scene_11;
 _next('scene_12', 1000, false);
 print('они были похоронены,');
 }
@@ -358,7 +359,7 @@ print('они были похоронены,');
 function scene_12() {
 clear();
 var current = "scene_12";
-var currentF = scene_12;
+var reload = window.scene_12;
 print('А их души навеки воссоедены');
 }
 
