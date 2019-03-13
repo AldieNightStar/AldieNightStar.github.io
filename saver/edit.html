@@ -17,7 +17,7 @@
 
 
 <center>
-	<b>Nothing here</b>
+	<button onclick="addlink()">Add LINK</button>
 </center>
 
 
@@ -28,6 +28,12 @@
 <button style="font-size: 32px" onclick="save()">SAVE</button>
 
 <script type="text/javascript">
+	function addlink() {
+		var url = window.prompt("Enter link");
+		var name = window.prompt("Name");
+		var t = "\t<a href=\"" + url + "\">" + name + "</a>\n"
+		var el = document.getElementById("t").value += t;
+	}
 	function save() {
 		var data = document.getElementById("t").value;
 		data = makeDataUrl(data);
