@@ -36,10 +36,8 @@
 			data = data.replace(/&/g, "&amp;");
 			data = data.replace(/</g, "&lt;");
 			data = data.replace(/>/g, "&gt;");
-			data = "<center style='color: red'>CODE</center>" + data;
-		} else {
-			data = data.replace(/\n/g, '<br>');
 		}
+		data = data.replace(/\n/g, '<br>');
 		return data;
 	}
 
