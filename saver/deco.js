@@ -1,9 +1,9 @@
 // CONFIG
 // -----------------
-var baseServer = "http://localhost:8000/";
+var basePath = "http://aldienightstar.github.io/saver/";
 
-var baseSite_edit = baseServer + "edit.html"
-var baseSite_apply = baseServer + "apply.html"
+var baseSite_edit = basePath + "edit.html"
+var baseSite_apply = basePath + "apply.html"
 // -----------------
 
 function toBase(data) {
