@@ -18,6 +18,7 @@
 <hr>
 
 <button id=edit onclick="edit()">EDIT</button>
+<button id=edit onclick="save()">SAVE</button>
 
 <script type="text/javascript">
 	window.onload = function() {
@@ -27,14 +28,6 @@
 		el.innerHTML = data;
 		
 		var wrp = data.indexOf("<");
-		if (wrp < 1) wrp = data.indexOf(".")
-		if (wrp < 1) wrp = data.indexOf(",")
-		if (wrp < 1) wrp = data.indexOf(";")
-		if (wrp < 1) wrp = data.indexOf("!")
-		if (wrp < 1) wrp = data.indexOf(":")
-		if (wrp < 1) wrp = data.indexOf("#")
-		if (wrp < 1) wrp = data.indexOf("*")
-		if (wrp < 1) wrp = data.indexOf("\n")
 		if (wrp < 1) wrp = 20;
 		document.title = data.substring(0, wrp);
 	}
@@ -42,6 +35,11 @@
 	function edit() {
 		var url = editDataUrl(readDecodedData());
 		window.location.href = url;
+	}
+
+	function save() {
+		var data = readDecodedData();
+		download(document.title + ".html", document.getElementById("t").innerHTML);
 	}
 </script>
 
