@@ -18,28 +18,51 @@
 <hr>
 
 <button id=edit onclick="edit()">EDIT</button>
-<button id=edit onclick="save()">SAVE</button>
+<button id=edit onclick="save()">SAVE OFFLINE</button>
 
 <script type="text/javascript">
 	window.onload = function() {
-		var data = readDecodedData();
-		var el = document.getElementById("t");
-		data = data.replace(/\n/g, '<br>');
-		el.innerHTML = data;
+		var data = codeReceiveProcess(readDecodedData());
+		document.getElementById("t").innerHTML = data;
 		
 		var wrp = data.indexOf("<");
 		if (wrp < 1) wrp = 20;
 		document.title = data.substring(0, wrp);
 	}
 
+	function codeReceiveProcess(data) {
+		if (data.endsWith(base_codeSuffix)) {
+			data = data.substring(0, data.length - base_codeSuffix.length);
+			data = data.replace(/&/g, "&amp;");
+			data = data.replace(/</g, "&lt;");
+			data = data.replace(/>/g, "&gt;");
+			data = "<center style='color: red'>CODE</center>" + data;
+		} else {
+			data = data.replace(/\n/g, '<br>');
+		}
+		return data;
+	}
+
+	function codeSendProcess(data) {
+		if (data.endsWith(base_codeSuffix)) {
+			data = data.substring(0, data.length - base_codeSuffix.length);
+		}
+		return data;
+	}
+
 	function edit() {
-		var url = editDataUrl(readDecodedData());
+		var data = codeSendProcess(readDecodedData());
+		var url = editDataUrl(data);
 		window.location.href = url;
 	}
 
 	function save() {
 		var data = readDecodedData();
-		download(document.title + ".html", document.getElementById("t").innerHTML);
+		download(document.title + ".html",
+			"<pre style='font-size: 24px'>\n"
+			+ document.getElementById("t").innerHTML
+			+ "\n</pre><br><br><hr><i>by HaxiDenti</i>"
+		);
 	}
 </script>
 

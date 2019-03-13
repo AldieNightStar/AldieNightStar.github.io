@@ -25,17 +25,19 @@
 
 
 <hr>
-<button style="font-size: 32px" onclick="save()">SAVE</button>
+<button style="font-size: 32px" onclick="save(false)">APPLY as HTML</button>
+<button style="font-size: 32px" onclick="save(true)">APPLY as CODE</button>
 
 <script type="text/javascript">
 	function addlink() {
 		var url = window.prompt("Enter link");
-		var name = window.prompt("Name");
+		var name = window.prompt("Enter name");
 		var t = "<a href=\"" + url + "\">" + name + "</a> "
 		var el = document.getElementById("t").value += t;
 	}
-	function save() {
+	function save(isCode) {
 		var data = document.getElementById("t").value;
+		if (isCode) data += base_codeSuffix;
 		data = makeDataUrl(data);
 		window.location.href = data;
 	}

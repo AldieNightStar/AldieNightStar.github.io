@@ -1,12 +1,14 @@
 // CONFIG
 // -----------------
 var basePath = "http://aldienightstar.github.io/saver/";
-// var basePath = "";
+var basePath = "";
 
 var baseSite_edit = basePath + "edit.html"
 var baseSite_apply = basePath + "apply.html"
 
 var specialPrefix = "?d="
+
+var base_codeSuffix = "$#$$";
 // -----------------
 
 function toBase(data) {
@@ -52,3 +54,4 @@ function download(filename, text) {
   element.click();
   document.body.removeChild(element);
 }
+
