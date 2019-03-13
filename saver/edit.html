@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<b>After clicking 'Save' button, please save the link in address bar in bookmarks or elsewhere</b><hr>
+<b>After clicking 'Save' button, please save the link in address bar in bookmarks or elsewhere<br><i><font color=red>by HaxiDenti</font></i></b><hr>
 
 <textarea id=t placeholder="Type here your data" style="width: 99%; height: 300px"></textarea>
 <hr>
@@ -31,7 +31,7 @@
 	function addlink() {
 		var url = window.prompt("Enter link");
 		var name = window.prompt("Name");
-		var t = "\t<a href=\"" + url + "\">" + name + "</a>\n"
+		var t = "<a href=\"" + url + "\">" + name + "</a> "
 		var el = document.getElementById("t").value += t;
 	}
 	function save() {
