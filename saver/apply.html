@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>New Info</title>
+	<script type="text/javascript" src="deco.js"></script>
+</head>
+<body>
+
+<hr>
+<center>SAVE YOUR DATA INSIDE THE URL</center>
+<hr>
+
+<pre id=t style="font-size:24px">
+</pre>
+
+<hr>
+<center>by HaxiDenti</center>
+<hr>
+
+<button id=edit onclick="edit()">EDIT</button>
+
+<script type="text/javascript">
+	window.onload = function() {
+		var data = readDecodedData();
+		var el = document.getElementById("t");
+		data = data.replace(/\n/g, '<br>');
+		el.innerHTML = data;
+	}
+
+	function edit() {
+		var url = editDataUrl(readDecodedData());
+		window.location.href = url;
+	}
+</script>
+
+</body>
+</html>

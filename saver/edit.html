@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>New Info</title>
+	<script type="text/javascript" src="deco.js"></script>
+</head>
+<body>
+
+<b>After clicking 'Save' button, please save the link in address bar in bookmarks or elsewhere</b><hr>
+
+<textarea id=t placeholder="Type here your data" style="width: 99%; height: 300px"></textarea>
+<hr>
+
+
+
+
+
+
+<center>
+	<b>Nothing here</b>
+</center>
+
+
+
+
+
+<hr>
+<button style="font-size: 32px" onclick="save()">SAVE</button>
+
+<script type="text/javascript">
+	function save() {
+		var data = document.getElementById("t").value;
+		data = makeDataUrl(data);
+		window.location.href = data;
+	}
+	window.onload = function() {
+		var data = readDecodedData();
+		var el = document.getElementById("t");
+		el.value = data;
+	}
+</script>
+
+</body>
+</html>
