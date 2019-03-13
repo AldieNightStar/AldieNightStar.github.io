@@ -25,6 +25,18 @@
 		var el = document.getElementById("t");
 		data = data.replace(/\n/g, '<br>');
 		el.innerHTML = data;
+		
+		var wrp = data.indexOf("<");
+		if (wrp < 1) wrp = data.indexOf(".")
+		if (wrp < 1) wrp = data.indexOf(",")
+		if (wrp < 1) wrp = data.indexOf(";")
+		if (wrp < 1) wrp = data.indexOf("!")
+		if (wrp < 1) wrp = data.indexOf(":")
+		if (wrp < 1) wrp = data.indexOf("#")
+		if (wrp < 1) wrp = data.indexOf("*")
+		if (wrp < 1) wrp = data.indexOf("\n")
+		if (wrp < 1) wrp = 20;
+		document.title = data.substring(0, wrp);
 	}
 
 	function edit() {

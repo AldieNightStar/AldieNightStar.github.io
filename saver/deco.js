@@ -5,6 +5,8 @@ var basePath = "http://aldienightstar.github.io/saver/";
 
 var baseSite_edit = basePath + "edit.html"
 var baseSite_apply = basePath + "apply.html"
+
+var specialPrefix = "?d="
 // -----------------
 
 function toBase(data) {
@@ -24,9 +26,9 @@ function fromBase(b64) {
 
 function readData() {
 	var url = window.location.href;
-	var indexOfSpec = url.indexOf("#");
+	var indexOfSpec = url.indexOf(specialPrefix);
 	if (indexOfSpec < 0) return "";
-	return url.substring(indexOfSpec+1);
+	return url.substring(indexOfSpec + specialPrefix.length);
 }
 
 function readDecodedData() {
@@ -34,9 +36,9 @@ function readDecodedData() {
 }
 
 function makeDataUrl(data) {
-	return baseSite_apply + "#" + toBase(data);
+	return baseSite_apply + specialPrefix + toBase(data);
 }
 
 function editDataUrl(data) {
-	return baseSite_edit + "#" + toBase(data);
+	return baseSite_edit + specialPrefix + toBase(data);
 }
