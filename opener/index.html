@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML WINDOW OPENER</title>
+</head>
+<body>
+
+<center id=elems>
+	<h1>WINDOW OPENER</h1>
+	<b id=info></b>
+	<hr><hr><hr>
+	<input id="newURL" style="width: 80%;" value="https://" onchange="updateUrl_();"><br>
+	<br><br>
+	<i>Copy this and paste into your bookmarks</i><br>
+	<input id="newURL_" style="font-size: 18px; width: 80%;" onclick="copyToClipFromElem();">
+<center>
+
+<script type="text/javascript">
+	function str_before(str, sym) {
+		var pos = str.indexOf(sym);
+		if (pos < 0) return str;
+		return str.substr(0, pos);
+	}
+	function str_after(str, sym) {
+		var pos = str.indexOf(sym);
+		if (pos < 0) return null;
+		pos += sym.length;
+		return str.substr(pos);
+	}
+
+	function copyToClipFromElem() {
+		var el = document.getElementById("newURL_");
+		el.select();
+		document.execCommand("copy");
+		notificate("Copied!");
+	}
+	
+	function info(txt) {
+		var el = document.getElementById("info");
+		el.innerHTML += txt + "<br>";
+	}
+
+	function openWindow(url, w, h) {
+		w = w | 400
+		h = h | 400
+		newWindow = window.open(url,'name','height='+w+',width='+h);
+		if (window.focus) {newWindow.focus()}
+		return false;
+	}
+
+	function updateUrl_() {
+		var el1 = document.getElementById("newURL");
+		var el2 = document.getElementById("newURL_");
+		var newURL = str_before(window.location.href, "#") + "#" + el1.value;
+		newURL = encodeURI(newURL);
+		el2.value = newURL;
+		notificate("URL updated!");
+	}
+
+	function notificate(str) {
+		var el = document.createElement("div");
+		el.innerHTML = "<b>[" + str + "]</b>";
+		document.body.appendChild(el);
+		setTimeout(function() { document.body.removeChild(el); }, 1500);
+	}
+
+	window.onload = function () {
+		var loc = str_after(window.location.href, "#");
+		if (!loc) {
+			info("[!] No url to open to")
+			document.getElementById("alreadyGen").innerHTML = "";
+			return;
+		}
+		openWindow(loc, 200, 200);
+		info("Location to open: " + loc);
+		// Ad can be here
+	}
+
+	
+</script>
+
+</body>
+</html>
