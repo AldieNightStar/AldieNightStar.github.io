@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Monna Histea Engine V6 * HaxiDenti Ihor-fox [UA] 2019</title>
+	<!-- <meta charset="utf-8"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		
+
+		.standardButtons {
+			position: absolute;
+			overflow: auto;
+		}
+
+		.standardButtons button {
+			display: block;
+			width: 99%;
+			border-radius: 0px 32px;
+			color: white;
+			background-color: rgba(0, 0, 0, .5);
+			transition: 200ms;
+			font-size: 20px;
+			width: 100%;
+		}
+
+		.standardButtons button:hover {
+			background-color: white;
+			color: black;
+			border-radius: 32px 0px;
+		}
+
+		.standardNextButton{
+			position: fixed;
+			bottom: 0px;
+			width: 100%;
+			height: 60px;
+			border-radius: 32px 32px;
+			background-color: rgba(0, 0, 0, .5);
+			color: white;
+			transition: 200ms;
+			font-size: 24px;
+		}
+
+		.standardNextButton:hover {
+			background-color: white;
+			color: black;
+		}
+
+		#app {
+			position: absolute;
+			width: 90%;
+		}
+
+		.standardText {
+			position: absolute;
+			font-size: 20px;
+			border-radius: 32px;
+			padding: 32px;
+			border: none;
+			background-color: rgba(0, 0, 0, .4);
+			color: white;
+			transition: 300ms;
+			overflow: auto;
+		}
+
+		#body {
+			transition: 300ms;
+		}
+
+		#images img {
+			transition: 1000ms;
+		}
+
+		#vendoring {
+			position: fixed;
+			right: 0%;
+			bottom: 1%;
+			font-size: 17px;
+			color: yellow;
+			background-color: rgba(0, 0, 0, .4);
+		}
+	</style>
+</head>
+<body>
+
+	<div id=images></div>
+	<div id=app>
+		<div id=text class=standardText></div>
+	</div>
+	
+	<div id=vendoring>HaxiDenti &lt;3 Aldie NightStar</div>
+	
+	<div id="buttons" class="standardButtons"></div>
+	<button id="nextButton" class="standardNextButton">Next &gt;&gt;</button>
+	
+	
+
+	<script type="text/javascript">
+		
+
+		var chapters = [];
+		function _chapter(name, sceneName) {
+			chapters.push(
+				{name: name, scene: sceneName}
+			);
+		}
+
+		var scenes = {};
+		var ext = {};
+
+		// Save and load the game
+		var mem = {}
+		function save(slot) {
+			memjson = JSON.stringify(mem);
+			localStorage.setItem('slot_' + slot, memjson);
+		}
+
+		function load(slot) {
+			memjson = localStorage.getItem('slot_' + slot);
+			mem = JSON.parse(memjson);
+		}
+
+		function css_id_class(id, className) {
+			var el = document.getElementById(id);
+			if (!className) return el.className;
+			el.className = className;
+		}
+
+		function bg_scale(sX, sY) {
+			document.body.sX = sX;
+			document.body.sY = sY;
+		}
+
+		// data: {trans, scale}
+		function bg_pos(pos, data) {
+			if (data !== undefined) {
+				if (data.trans) bgTransition(data.trans);
+				if (data.scale) bg_scale(data.scale, data.scale);
+			}
+			document.body.style.backgroundPosition = pos;
+		}
+
+		function bg_pos2(pos, pos2, data) {
+			if (data !== undefined) {
+				if (data.trans) bgTransition(data.trans);
+				if (data.scale) bg_scale(data.scale, data.scale);
+			}
+			var prevTransition = document.body.style.transition;
+			document.body.style.transition = "0ms";
+			bg_pos(pos);
+			setTimeout(function(){
+				document.body.style.transition = prevTransition;
+				bg_pos(pos2);
+			}, 100);
+		}
+
+		function body_bg_pos(el, offsetWidth, offsetHeight) {
+			var sX = document.body.sX || 1;
+			var sY = document.body.sY || 1;
+			el.style['background-size'] = (offsetWidth * sX) + "px " + (offsetHeight * sY) + "px";
+		}
+
+		// Timers
+		window.addEventListener("load", function() {
+			__vendor();
+			setInterval(function() {
+				// var width   =  window.innerWidth;
+				var width   = window.innerWidth;
+				var height  = window.innerHeight;
+				var app     = document.getElementById("app");
+				var buttons = document.getElementById("buttons");
+				app.style.height = (height - 10) + "px";
+				// Music AB check
+				mus_ab_check();
+				body_bg_pos(document.body, width, height)
+			}, 100);
+
+			// Animation for added images
+			setInterval(function() {
+				var images = document.getElementById("images").children;
+				for (var i = 0; i < images.length; i++) {
+					var img = images[i];
+					if (img.fun) {
+						img.fun.bind(img)();
+					}
+				}
+			}, 1000);
+			__vendor();
+		})
+
+		function __vendor() {
+			var el = document.getElementById("vendoring");
+			el.innerHTML = "Monna Histea Engine V6 * HaxiDenti Ihor-fox [UA] 2019";
+		}
+
+		function button(caption, oncl) {
+			var b = document.createElement("button");
+			b.innerHTML = caption;
+			b.onclick = oncl;
+			var div = document.getElementById("buttons");
+			div.appendChild(b);
+		}
+
+		function clearAll() {
+			cleart();
+			clearb();
+			_nextVisible(false);
+			_nextFunction();
+		}
+
+		function cleart() {
+			document.getElementById("text"   ).innerHTML = "";
+		}
+
+		function clearb() {
+			document.getElementById("buttons").innerHTML = "";
+		}
+
+		function print(txt) {
+			txt = txt.replace(/\n/g, '<br>');
+			printnb(txt + "<br>");
+		}
+
+		function printnb(txt) {
+			var div = document.getElementById("text");
+			div.innerHTML += txt;
+			div.scrollTop = div.scrollHeight; // Scroll to the end
+		}
+
+		function bgImg(src) {
+			bg_pos("center");
+			bg_scale(1, 1);
+			var height = window.innerHeight;
+			document.body.style['background-image'] = "url("+src+")";
+			document.body.style['background-repeat'] = "no-repeat";
+			document.body.style['background-attachment'] = "fixed";
+			document.body.style['transition'] = "200ms";
+		}
+
+		function bgTransition(n) {
+			document.body.style.transition = n + "ms";
+		}
+
+
+
+		var sound = new Audio();
+		function snd(src) {
+			if (src == undefined
+				|| src == ""
+				|| src == "."
+			) {
+				sound.currentTime = 0;
+				sound.pause();
+				return;
+			}
+			sound.src = src;
+			sound.currentTime = 0;
+			sound.play();
+		}
+
+
+		var music = new Audio();
+		music.volume = 0.4;
+		music.loop = true;
+		function mus(src) {
+			mus_ab();
+			if (src == undefined
+				|| src == ""
+				|| src == "."
+			) {
+				music.currentTime = 0;
+				music.pause();
+				return;
+			}
+			music.src = src;
+			music.currentTime = 0;
+			music.play();
+		}
+
+		function mus_ab(min, max) {
+			if (!min) min = -1;
+			if (!max) max = 100000;
+			music.ab_a = min;
+			music.ab_b = max;
+		}
+
+		function mus_ab_check() {
+			var min = music.ab_a || -1;
+			var max = music.ab_b || 100000;
+			var cur = music.currentTime;
+			if (cur < min || cur > max) {
+				music.currentTime = min;
+			}
+		}
+
+		function mus_time(n, changeOnPast) {
+			if (!changeOnPast) return music.currentTime = n;
+			if (music.currentTime > n) {
+				music.currentTime = n;
+			}
+		}
+
+		function _nextVisible(flag) {
+			var el = document.getElementById("nextButton");
+			if (flag === true) {
+				el.style.display = "block";
+			} else {
+				el.style.display = "none";
+			}
+		}
+
+		function _nextFunction(f) {
+			var el = document.getElementById("nextButton");
+			el.onclick = f;
+		}
+
+		function _next(name, del, auto) {
+			setTimeout(function() {
+				var fun = function() { goto(name) }; // _nextFunction() -- to avoid repeats
+				if (!auto) {
+					_nextVisible(true);
+					_nextFunction(fun);
+				} else {
+					fun();
+					// clear() call's: _nextVisible(false);
+				}
+			}, del);
+		}
+
+		var currentScene;
+		var current = "";
+
+		function goto(sceneName) {
+			var scene = window.scenes[sceneName];
+			if (!scene) alert("No such scene: " + sceneName);
+			currentScene = scene;
+			current = sceneName;
+			scene();
+		}
+
+		function reload() {
+			currentScene();
+		}
+
+		function img_set(src, x, y, w, h, fun) {
+			var div = document.getElementById("images");
+			var img = document.createElement("img");
+			img.src = src;
+			img.style.position = "absolute";
+			img.style.left     = x + "%";
+			img.style.top      = y + "%";
+			img.style.width    = w + "%";
+			img.style.height   = h + "%";
+			if (fun) img.fun = fun;
+			div.appendChild(img);
+			return img;
+		}
+
+		function img_side(src, left, fun) {
+			if (left) {
+				img_set(src, 0, 30, 30, 70, fun);
+			} else {
+				img_set(src, 70, 30, 30, 70, fun).style.transform = "scaleX(-1)";
+			}
+		}
+
+		function img_clear() {
+			var div = document.getElementById("images");
+			div.innerHTML = "";
+		}
+
+		function _text_hide(flag) {
+			var app = document.getElementById("app");
+			var btns = document.getElementById("buttons");
+			if (flag) {
+				app.style.opacity = 0;
+				btns.style.display = "none";
+			} else {
+				btns.style.display = "block";
+				app.style.opacity = 1;
+			}
+		}
+
+		function _el_pos(el, x, y, w, h) {
+			el.style.left   = x + "%";
+			el.style.top    = y + "%";
+			el.style.width  = w + "%";
+			el.style.height = h + "%";
+		}
+
+		// POS
+		var pos         = {};
+		pos.left        = [0,  40, 40, 30];
+		pos.right       = [60, 40, 40, 30];
+		pos.top         = [5,  0,  90, 20];
+		pos.bottom      = [5,  60, 90, 20];
+		pos.center      = [5,  40, 90, 30];
+		pos.full        = [0,  0,  70, 85];
+		pos.full2       = [70, 0,  30, 85];
+		// ANTI POS
+		pos.anti        = {};
+		pos.anti.left   = pos.right;
+		pos.anti.right  = pos.left;
+		pos.anti.top    = pos.bottom;
+		pos.anti.bottom = pos.top;
+		pos.anti.center = pos.top;
+		pos.anti.full   = pos.full2;
+
+		function _pos(name) {
+			var p = pos[name];
+			var panti = pos.anti[name];
+			_text_pos(p[0], p[1], p[2], p[3]);
+			_buttons_pos(panti[0], panti[1], panti[2], panti[3]);
+		}
+
+		function _text_pos(x, y, w, h) {
+			var el = document.getElementById("text");
+			_el_pos(el, x, y, w, h);
+		}
+
+		function _buttons_pos(x, y, w, h) {
+			var el = document.getElementById("buttons");
+			_el_pos(el, x, y, w, h);
+		}
+
+		function _chapterButtons() {
+			chapters.forEach(function(chapter, i, arr) {
+				button((i + 1) + ". " + chapter.name, function() {
+					window.scenes[chapter.scene]();
+				});
+			})
+		}
+
+		function _waitUntilMusicPos(waitTime) {
+			var currentTime = music.currentTime;
+			if (currentTime < waitTime) {
+				return (waitTime - currentTime) * 1000;
+			} else {
+				return 1000;
+			}
+		}
+
+		_text_pos(10, 40, 90, 30);
+		_buttons_pos(0, 0, 99, 30);
+
+window.scenes['scene_0'] = function(){
+clearAll();
+var next = window.scenes['scene_1'];
+bgImg('res/01.jpg');
+_next('scene_1', 0, false);
+_pos("full");
+print('Monna Histea');
+print('<font color=yellow>Choose your chapter</font>');
+_chapterButtons();
+}
+
+window.scenes['scene_1'] = function(){
+clearAll();
+var next = window.scenes['scene_2'];
+bgImg('res/01.jpg');
+mus('res/01.mp3');
+_next('scene_2', _waitUntilMusicPos(9), true);
+_pos("left");
+print('Знаешь ли ты, что время твое драгоценное?');
+}
+
+window.scenes['scene_2'] = function(){
+clearAll();
+var next = window.scenes['scene_3'];
+_next('scene_3', _waitUntilMusicPos(13), true);
+print('Что то, что ты делаешь, может не только радовать тебя,');
+}
+
+window.scenes['scene_3'] = function(){
+clearAll();
+var next = window.scenes['scene_4'];
+_next('scene_4', _waitUntilMusicPos(20), true);
+_pos("bottom");
+print('Но и... изменять мир!');
+}
+
+window.scenes['scene_4'] = function(){
+clearAll();
+var next = window.scenes['scene_5'];
+bgImg('res/02.jpg');
+_next('scene_5', _waitUntilMusicPos(25), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(4000);
+bg_pos2("left", "right");
+print('Можешь ли ты представить мир, где ничья идея ничего не меняла?');
+}
+
+window.scenes['scene_5'] = function(){
+clearAll();
+var next = window.scenes['scene_6'];
+_next('scene_6', _waitUntilMusicPos(30), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos2("top", "bottom 2000");
+print('Мир, где мы все бездушны и мертвы...');
+}
+
+window.scenes['scene_6'] = function(){
+clearAll();
+var next = window.scenes['scene_7'];
+_next('scene_7', _waitUntilMusicPos(37), true);
+_pos("center");
+print('Нет! И я нет!');
+}
+
+window.scenes['scene_7'] = function(){
+clearAll();
+var next = window.scenes['scene_8'];
+bgImg('res/03.jpg');
+_next('scene_8', _waitUntilMusicPos(45), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(2000);
+bg_pos2("left", "center");
+print('Каждый из нас может начать что-то менять.');
+}
+
+window.scenes['scene_8'] = function(){
+clearAll();
+var next = window.scenes['scene_9'];
+_next('scene_9', _waitUntilMusicPos(50), true);
+print('Но главный вопрос один!');
+}
+
+window.scenes['scene_9'] = function(){
+clearAll();
+var next = window.scenes['scene_10'];
+_next('scene_10', _waitUntilMusicPos(48), true);
+print('С чего же начать?');
+}
+
+window.scenes['scene_10'] = function(){
+clearAll();
+var next = window.scenes['scene_11'];
+_next('scene_11', _waitUntilMusicPos(50), true);
+print('И прежде, чем ты получишь ответ,');
+}
+
+window.scenes['scene_11'] = function(){
+clearAll();
+var next = window.scenes['scene_12'];
+_next('scene_12', _waitUntilMusicPos(51), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Знай!');
+}
+
+window.scenes['scene_12'] = function(){
+clearAll();
+var next = window.scenes['scene_13'];
+_next('scene_13', _waitUntilMusicPos(54), true);
+print('Ты просветлен!');
+}
+
+window.scenes['scene_13'] = function(){
+clearAll();
+var next = window.scenes['scene_14'];
+bgImg('res/04.jpg');
+_next('scene_14', _waitUntilMusicPos(59), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(4000);
+bg_pos2("bottom", "top");
+print('Ты должен начать из себя');
+}
+
+window.scenes['scene_14'] = function(){
+clearAll();
+var next = window.scenes['scene_15'];
+_next('scene_15', _waitUntilMusicPos(65), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Все, что вокруг тебя происходит,');
+}
+
+window.scenes['scene_15'] = function(){
+clearAll();
+var next = window.scenes['scene_16'];
+_next('scene_16', _waitUntilMusicPos(69), true);
+print('Всё в твоей голове');
+}
+
+window.scenes['scene_16'] = function(){
+clearAll();
+var next = window.scenes['scene_17'];
+_next('scene_17', _waitUntilMusicPos(70), true);
+print(''+(Пасхалка)+'');
+}
+
+window.scenes['scene_17'] = function(){
+clearAll();
+var next = window.scenes['scene_18'];
+_next('scene_18', _waitUntilMusicPos(75), true);
+print('Ну так начни!');
+}
+
+window.scenes['scene_18'] = function(){
+clearAll();
+var next = window.scenes['scene_19'];
+bgImg('res/05.jpg');
+_next('scene_19', _waitUntilMusicPos(77), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(1000);
+bg_pos2("left", "right");
+print('Сверни горы!');
+}
+
+window.scenes['scene_19'] = function(){
+clearAll();
+var next = window.scenes['scene_20'];
+_next('scene_20', _waitUntilMusicPos(80), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Покажи, что ты достоен');
+}
+
+window.scenes['scene_20'] = function(){
+clearAll();
+var next = window.scenes['scene_21'];
+_next('scene_21', _waitUntilMusicPos(84), true);
+print('Называться тем, кто просветлен');
+}
+
+window.scenes['scene_21'] = function(){
+clearAll();
+var next = window.scenes['scene_22'];
+_next('scene_22', _waitUntilMusicPos(87), true);
+_pos("top");
+print('Нашу планету заселяет 6 миллионов.');
+}
+
+window.scenes['scene_22'] = function(){
+clearAll();
+var next = window.scenes['scene_23'];
+bgImg('res/02.jpg');
+_next('scene_23', _waitUntilMusicPos(91), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(2000);
+bg_pos2("top left", "top right");
+print('10% из который могут что-то менять.');
+}
+
+window.scenes['scene_23'] = function(){
+clearAll();
+var next = window.scenes['scene_24'];
+_next('scene_24', _waitUntilMusicPos(95), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos("center");
+print('Может и ты в 10% лучших?');
+}
+
+window.scenes['scene_24'] = function(){
+clearAll();
+var next = window.scenes['scene_25'];
+_next('scene_25', _waitUntilMusicPos(100), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Пойди и попробуй.');
+}
+
+window.scenes['scene_25'] = function(){
+clearAll();
+var next = window.scenes['scene_26'];
+bgImg('res/01.jpg');
+_next('scene_26', _waitUntilMusicPos(103), true);
+print('Только так узнаешь,');
+}
+
+window.scenes['scene_26'] = function(){
+clearAll();
+var next = window.scenes['scene_27'];
+_next('scene_27', _waitUntilMusicPos(105), true);
+print('...кто ты!...');
+}
+
+window.scenes['scene_27'] = function(){
+clearAll();
+var next = window.scenes['scene_28'];
+bgImg('res/03.jpg');
+_next('scene_28', _waitUntilMusicPos(115), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Но что тут? Новые горизонты?');
+}
+
+window.scenes['scene_28'] = function(){
+clearAll();
+var next = window.scenes['scene_29'];
+_next('scene_29', _waitUntilMusicPos(120), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(3000);
+bg_pos2("bottom right", "bottom left");
+print('Сомнения, падения?');
+}
+
+window.scenes['scene_29'] = function(){
+clearAll();
+var next = window.scenes['scene_30'];
+_next('scene_30', _waitUntilMusicPos(125), true);
+print('Чего тебе бояться?');
+}
+
+window.scenes['scene_30'] = function(){
+clearAll();
+var next = window.scenes['scene_31'];
+bgImg('res/04.jpg');
+_next('scene_31', _waitUntilMusicPos(140), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+print('Вечный механизм уже запущен!');
+}
+
+window.scenes['scene_31'] = function(){
+clearAll();
+var next = window.scenes['scene_32'];
+_next('scene_32', _waitUntilMusicPos(150), true);
+print('Ты тот, кого не остановить...');
+}
+
+window.scenes['scene_32'] = function(){
+clearAll();
+var next = window.scenes['scene_33'];
+bgImg('res/05.jpg');
+_next('scene_33', _waitUntilMusicPos(160), true);
+bgTransition(300);
+bg_scale(3, 3);
+bgTransition(6000);
+bg_pos2("top", "bottom");
+print('Знай это! Ведь ты...');
+}
+
+window.scenes['scene_33'] = function(){
+clearAll();
+var next = window.scenes['scene_34'];
+_next('scene_34', _waitUntilMusicPos(180), true);
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos("center");
+print('Писатель нового поколения!');
+}
+
+window.scenes['scene_34'] = function(){
+clearAll();
+bgTransition(300);
+bg_scale(3, 3);
+bg_pos('center', {scale: 1});
+_pos("center");
+print('Monna Histea Engine v6');
+print('<i>HaxiDenti</i>');
+}
+
+
+
+goto('scene_0');
+
+</script>
+
+
+</body>
+</html>
