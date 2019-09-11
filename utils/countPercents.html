@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Percents</title>
+</head>
+<body>
+	<center>Enter number and push enter</center><hr>
+	<b>0.13% of</b>
+	<input><br>
+	<label>0</label><br>
+	<u>For half year:</u> <label>0</label><br>
+	<u>For all year:</u> <label>0</label><br>
+	<hr>
+	<b>Change percent: </b><input>
+
+<script type="text/javascript">
+	var inputs = document.getElementsByTagName("input");
+	var labels = document.getElementsByTagName("label")
+	var bolds = document.getElementsByTagName("b");
+	var percent = 0.13;
+
+	function setPercent(n) {
+		percent = (n / 12) / 100;
+		bolds[0].innerHTML = n + "% of";
+		inputs[1].value = n;
+	}
+
+	function count(n, mul) {
+		mul = mul || 1;
+		var small = (n * percent) * mul;
+		var multiplied = Math.floor(n + small);
+		small = Math.floor(small);
+		return small + " (" + multiplied + ")";
+	}
+
+	function apply(n) {
+		var n = Number.valueOf()(n);
+		labels[0].innerHTML = count(n, 1);
+		labels[1].innerHTML = count(n, 6);
+		labels[2].innerHTML = count(n, 12);
+	}
+
+	inputs[0].onchange = function(e) {
+		apply(e.target.value)
+	};
+
+	inputs[1].onchange = function(e) {
+		setPercent(Number.valueOf()(e.target.value));
+		apply(inputs[0].value);
+	}
+
+	window.onload = function() {
+		setPercent(14);
+	}
+</script>
+
+</body>
+</html>
