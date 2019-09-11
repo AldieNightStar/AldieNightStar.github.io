@@ -10,6 +10,7 @@
 	<label>0</label><br>
 	<u>For half year:</u> <label>0</label><br>
 	<u>For all year:</u> <label>0</label><br>
+	<u>Every 1/30 day:</u> <label>0</label><br>
 	<hr>
 	<b>Change percent: </b><input>
 
@@ -38,6 +39,7 @@
 		labels[0].innerHTML = count(n, 1);
 		labels[1].innerHTML = count(n, 6);
 		labels[2].innerHTML = count(n, 12);
+		labels[3].innerHTML = count(n / 30, 1);
 	}
 
 	inputs[0].onchange = function(e) {
