@@ -39,6 +39,7 @@
 			data = data.replace(/>/g, "&gt;");
 		}
 		data = data.replace(/\n/g, '<br>');
+		data = data.replace(/\r/g, '');
 		return data;
 	}
 
@@ -57,10 +58,10 @@
 
 	function save() {
 		var data = readDecodedData();
-		download(document.title + ".html",
+		download("text/html", document.title,
 			"<pre style='font-size: 24px'>\n"
 			+ document.getElementById("t").innerHTML
-			+ "\n</pre><br><br><hr><i>by HaxiDenti</i>"
+			+ "\n</pre><br><br><hr><i>Made in \"Saver\" by HaxiDenti</i>"
 		);
 	}
 </script>
