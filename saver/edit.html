@@ -9,36 +9,13 @@
 
 <b>After clicking 'Save' button, please save the link in address bar in bookmarks or elsewhere<br><i><font color=red>by HaxiDenti</font></i></b><hr>
 
-<textarea id=t placeholder="Type here your data" style="width: 99%; height: 300px; font-size:24px;"></textarea>
-<hr>
+<textarea id="t" placeholder="Type here your data" style="width: 99%; height: 300px; font-size:24px;"></textarea>
 
-
-
-
-
-
-<center>
-	<button onclick="addlink()">Add LINK</button>
-</center>
-
-
-
-
-
-<hr>
-<button style="font-size: 32px" onclick="save(false)">APPLY as HTML</button>
-<button style="font-size: 32px" onclick="save(true)">APPLY as CODE</button>
+<button style="font-size: 32px" onclick="save(true)">SAVE</button>
 
 <script type="text/javascript">
-	function addlink() {
-		var url = window.prompt("Enter link");
-		var name = window.prompt("Enter name");
-		var t = "<a href=\"" + url + "\">" + name + "</a> "
-		var el = document.getElementById("t").value += t;
-	}
-	function save(isCode) {
+	function save() {
 		var data = document.getElementById("t").value;
-		if (isCode) data += base_codeSuffix;
 		data = makeDataUrl(data);
 		window.location.href = data;
 	}

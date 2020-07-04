@@ -11,15 +11,16 @@
 <center>SAVE YOUR DATA INSIDE THE URL</center>
 <hr>
 
-<pre id=t style="font-size:24px">
-</pre>
+<center>
+	<textarea id=t style="font-size:24px; width: 89%; height: 300px; padding: 1%; border: none" readonly></textarea>
+</center>
 
 <hr>
 <center>by HaxiDenti</center>
 <hr>
 
 <button style="font-size: 32px" id=edit onclick="edit()">EDIT</button>
-<button style="font-size: 32px" id=edit onclick="save()">SAVE OFFLINE</button>
+<button style="font-size: 32px" id=edit onclick="save()">SAVE TEXT</button>
 
 <script type="text/javascript">
 	window.onload = function() {
@@ -32,18 +33,12 @@
 	}
 
 	function codeReceiveProcess(data) {
-		if (data.endsWith(base_codeSuffix)) {
-			data = data.substring(0, data.length - base_codeSuffix.length);
-			data = data.replace(/&/g, "&amp;");
-			data = data.replace(/</g, "&lt;");
-			data = data.replace(/>/g, "&gt;");
-		}
-		data = data.replace(/\n/g, '<br>');
 		data = data.replace(/\r/g, '');
 		return data;
 	}
 
 	function codeSendProcess(data) {
+		// Remove old suffix
 		if (data.endsWith(base_codeSuffix)) {
 			data = data.substring(0, data.length - base_codeSuffix.length);
 		}
@@ -58,11 +53,7 @@
 
 	function save() {
 		var data = readDecodedData();
-		download("text/html", document.title,
-			"<pre style='font-size: 24px'>\n"
-			+ document.getElementById("t").innerHTML
-			+ "\n</pre><br><br><hr><i>Made in \"Saver\" by HaxiDenti</i>"
-		);
+		download("text/plain", document.title, document.getElementById("t").innerHTML);
 	}
 </script>
 
