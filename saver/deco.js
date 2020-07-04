@@ -1,6 +1,6 @@
 // CONFIG
 // -----------------
-// var basePath = "http://aldienightstar.github.io/saver/";
+var basePath = "http://aldienightstar.github.io/saver/";
 var basePath = "";
 
 var baseSite_edit = basePath + "edit.html"
