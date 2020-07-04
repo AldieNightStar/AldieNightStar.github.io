@@ -11,13 +11,19 @@
 
 <textarea id="t" placeholder="Type here your data" style="width: 99%; height: 300px; font-size:24px;" wrap="off"></textarea>
 
-<button style="font-size: 32px" onclick="save(true)">SAVE</button>
+<button style="font-size: 32px" onclick="save(false)">SAVE</button>
+<button style="font-size: 32px" onclick="save(true)">SAVE (READ ONLY)</button>
 
 <script type="text/javascript">
-	function save() {
+	function save(readOnly) {
 		var data = document.getElementById("t").value;
-		data = makeDataUrl(data);
-		window.location.href = data;
+		if (readOnly) {
+			data = makeDataUrl(data, true)
+			window.open(data);
+		} else {
+			data = makeDataUrl(data, false);
+			window.location.href = data;
+		}
 	}
 	window.onload = function() {
 		var data = readDecodedData();

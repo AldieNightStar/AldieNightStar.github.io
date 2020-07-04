@@ -1,10 +1,11 @@
 // CONFIG
 // -----------------
 var basePath = "http://aldienightstar.github.io/saver/";
-var basePath = "";
+// var basePath = "";
 
 var baseSite_edit = basePath + "edit.html"
 var baseSite_apply = basePath + "apply.html"
+var baseSite_apply_readonly = basePath + "apply_readonly.html"
 
 var specialPrefix = "?d="
 
@@ -37,8 +38,12 @@ function readDecodedData() {
 	return fromBase(readData());
 }
 
-function makeDataUrl(data) {
-	return baseSite_apply + specialPrefix + toBase(data);
+function makeDataUrl(data, readOnly = false) {
+	var prefix = baseSite_apply;
+	if (readOnly) {
+		prefix = baseSite_apply_readonly;
+	}
+	return prefix + specialPrefix + toBase(data);
 }
 
 function editDataUrl(data) {

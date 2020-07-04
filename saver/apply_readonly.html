@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>New Info</title>
+	<script type="text/javascript" src="deco.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<center>
+	<textarea id=t style="font-size:24px; width: 89%; height: 300px; padding: 1%; border: none" readonly wrap="off"></textarea>
+</center>
+
+<hr>
+<center>Made using <a href="https://aldienightstar.github.io/saver/edit.html">Saver</a> - by HaxiDenti</center>
+
+<script type="text/javascript">
+	window.onload = function() {
+		var data = codeReceiveProcess(readDecodedData());
+		document.getElementById("t").innerHTML = data;
+		
+		var wrp = data.indexOf("\n");
+		if (wrp < 1) wrp = 20;
+		document.title = data.substring(0, wrp);
+	}
+
+	function codeReceiveProcess(data) {
+		data = data.replace(/\r/g, '');
+		return data;
+	}
+</script>
+
+</body>
+</html>
